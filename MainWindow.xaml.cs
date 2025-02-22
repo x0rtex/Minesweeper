@@ -19,8 +19,7 @@ namespace Minesweeper
 
             DifficultyLevel difficulty = (DifficultyLevel)CbxDifficulty.SelectedItem;
 
-            GameWindow gameWindow = new(difficulty);
-            gameWindow.Show();
+            new GameWindow(difficulty).Show();
             Close();
         }
     }

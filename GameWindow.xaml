@@ -24,7 +24,8 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
-            <TextBlock Grid.Column="0"
+            <TextBlock Name="TblkMines"
+                       Grid.Column="0"
                        FontSize="24"
                        VerticalAlignment="Center"
                        Text="Mines: 0"/>
