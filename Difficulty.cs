@@ -21,7 +21,7 @@ namespace Minesweeper
             _ => throw new Exception("Invalid Difficulty")
         };
 
-        public static Point GetGameBoardSize(Point gridSize) => new(gridSize.X * 32, gridSize.Y * 32);
+        public static Point GetAbsoluteBoardSize(Point gridSize) => new(gridSize.X * 32, gridSize.Y * 32);
 
         public static int GetMineCount(DifficultyLevel difficulty) => difficulty switch
         {

@@ -18,8 +18,10 @@ public class Cell : Button
         Background = Brushes.White;
         Foreground = Brushes.Gray;
     }
-    
-    protected override void OnClick()
+
+    protected override void OnClick() => Clear();
+
+    public void Clear()
     {
         IsEnabled = false;
         
