@@ -8,9 +8,7 @@ public class MineGrid : UniformGrid
     private readonly Point _gridDimensions;
     private readonly int _mineCount;
     private readonly Cell[,] _cells;
-    private List<Point> _cellPositions = [];
-    private List<Point> _minePositions = [];
-    
+
     public MineGrid(Point gridDimensions, Point absoluteBoardDimensions, int mineCount)
     {
         _gridDimensions = gridDimensions;
@@ -31,9 +29,11 @@ public class MineGrid : UniformGrid
     
     private void GenerateCells()
     {
-        Random random = new Random();
-        _cellPositions = CreateCellPositions(_gridDimensions);
-        _minePositions = _cellPositions.OrderBy(_ => random.Next()).Take(_mineCount).ToList();
+        List<Point> cellPositions = CreateCellPositions(_gridDimensions);
+        List<Point> minePositions = cellPositions
+            .OrderBy(_ => new Random().Next())
+            .Take(_mineCount)
+            .ToList();
         
         for (int x = 0; x < _gridDimensions.X; x++)
         for (int y = 0; y < _gridDimensions.Y; y++)
@@ -42,7 +42,7 @@ public class MineGrid : UniformGrid
             _cells[x, y] = cell;
             Children.Add(cell);
             
-            if (_minePositions.Contains(cell.Pos))
+            if (minePositions.Contains(cell.Pos))
                 cell.IsMine = true;
         }
     }
@@ -57,6 +57,12 @@ public class MineGrid : UniformGrid
         return cellPositions;
     }
 
+    private void UpdateAllAdjacentMines()
+    {
+        foreach (Cell cell in _cells)
+            UpdateAdjacentMines(cell);
+    }
+    
     private void UpdateAdjacentMines(Cell cell)
     {
         cell.AdjacentMines = 0;
@@ -64,27 +70,20 @@ public class MineGrid : UniformGrid
         for (int adjX = cell.Pos.X - 1; adjX <= cell.Pos.X + 1; adjX++)
         for (int adjY = cell.Pos.Y - 1; adjY <= cell.Pos.Y + 1; adjY++)
         {
-            if (CellIsOutsideBoardOrItself(adjX, adjY, cell.Pos))
+            if (CellIsItselfOrOutsideBoard(cell.Pos, adjX, adjY))
                 continue;
                 
             Cell adjacentCell = _cells[adjX, adjY];
-            if (adjacentCell.IsMine)
-                    cell.AdjacentMines++;
+            if (adjacentCell.IsMine) 
+                cell.AdjacentMines++;
         }
     }
 
-    private bool CellIsOutsideBoardOrItself(int adjX, int adjY, Point cellPos)
+    private bool CellIsItselfOrOutsideBoard(Point cellPos, int adjX, int adjY)
     {
-        return adjX < 0 
-               || adjX >= _gridDimensions.X 
-               || adjY < 0 
-               || adjY >= _gridDimensions.Y 
-               || (adjX == cellPos.X && adjY == cellPos.Y);
-    }
-
-    private void UpdateAllAdjacentMines()
-    {
-        foreach (Cell cell in _cells)
-            UpdateAdjacentMines(cell);
+        bool cellIsItself = adjX == cellPos.X && adjY == cellPos.Y;
+        bool cellIsOutsideBoard = adjX < 0 || adjY < 0 || adjX >= _gridDimensions.X || adjY >= _gridDimensions.Y;
+        
+        return cellIsItself || cellIsOutsideBoard;
     }
 }
