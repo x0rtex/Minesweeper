@@ -24,9 +24,8 @@ namespace Minesweeper
 
         private void InitializeGame()
         {
-            Point gridDimensions = Difficulty.GetGridSize(_difficulty);
+            (Point gridDimensions, int mineCount) = Difficulty.GetGridSizeAndMineCount(_difficulty);
             Point absoluteBoardDimensions = Difficulty.GetAbsoluteBoardSize(gridDimensions);
-            int mineCount = Difficulty.GetMineCount(_difficulty);
             TblkMines.Text = $"Mines: {mineCount}";
 
             Grid board = new() { Width = absoluteBoardDimensions.Y, Height = absoluteBoardDimensions.X };

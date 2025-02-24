@@ -12,24 +12,25 @@ namespace Minesweeper
 
     public static class Difficulty
     {
-        public static Point GetGridSize(DifficultyLevel difficulty) => difficulty switch
+        private static readonly Point GridSizeEasy = new(9, 9);
+        private static readonly Point GridSizeNormal = new(16, 16);
+        private static readonly Point GridSizeHard = new(16, 30);
+        private static readonly Point GridSizeExtreme = new(20, 30);
+        
+        private const int MineCountEasy = 10;
+        private const int MineCountNormal = 40;
+        private const int MineCountHard = 99;
+        private const int MineCountExtreme = 130;
+        
+        public static (Point, int) GetGridSizeAndMineCount(DifficultyLevel difficulty) => difficulty switch
         {
-            DifficultyLevel.Easy => new Point(9, 9),
-            DifficultyLevel.Normal => new Point(16, 16),
-            DifficultyLevel.Hard => new Point(16, 30),
-            DifficultyLevel.Extreme => new Point(20, 30),
+            DifficultyLevel.Easy => (GridSizeEasy, MineCountEasy),
+            DifficultyLevel.Normal => (GridSizeNormal, MineCountNormal),
+            DifficultyLevel.Hard => (GridSizeHard, MineCountHard),
+            DifficultyLevel.Extreme => (GridSizeExtreme, MineCountExtreme),
             _ => throw new Exception("Invalid Difficulty")
         };
 
         public static Point GetAbsoluteBoardSize(Point gridSize) => new(gridSize.X * 32, gridSize.Y * 32);
-
-        public static int GetMineCount(DifficultyLevel difficulty) => difficulty switch
-        {
-            DifficultyLevel.Easy => 10,
-            DifficultyLevel.Normal => 40,
-            DifficultyLevel.Hard => 99,
-            DifficultyLevel.Extreme => 130,
-            _ => throw new Exception("Invalid Difficulty")
-        };
     }
 }
