@@ -61,7 +61,7 @@ public class MineGrid : UniformGrid
         return cellPositions
             .OrderBy(_ => random.Next())
             .Take(_mineCount)
-            .ToList();;
+            .ToList();
     }
 
     private void UpdateAllAdjacentMines()
