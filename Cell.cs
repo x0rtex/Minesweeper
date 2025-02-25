@@ -30,22 +30,25 @@ public class Cell : Button
         }
     }
 
-    protected override void OnClick() => Clear();
+    protected override void OnClick() => CheckCell();
 
-    private void Clear()
+    private void CheckCell()
     {
         if (IsMine)
-        {
-            IsEnabled = false;
-            Background = Brushes.Red;
-            Content = "*";
-            MessageBox.Show("Game Over!");
-        }
+            ClearMineCell();
         else
-            ClearNonMine();
+            ClearEmptyCell();
     }
 
-    private void ClearNonMine()
+    private void ClearMineCell()
+    {
+        IsEnabled = false;
+        Background = Brushes.Red;
+        Content = "*";
+        MessageBox.Show("Game Over!");
+    }
+
+    private void ClearEmptyCell()
     {
         IsEnabled = false;
         Background = Brushes.LightGray;
