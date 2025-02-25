@@ -35,23 +35,22 @@ public class Cell : Button
     private void CheckCell()
     {
         if (IsMine)
-            ClearMineCell();
+            ExplodeMineCell();
         else
             ClearEmptyCell();
     }
 
-    private void ClearMineCell()
+    private void ExplodeMineCell()
     {
         IsEnabled = false;
-        Background = Brushes.Red;
-        Content = "*";
+        Foreground = Brushes.Red;
+        Content = "\ud83d\udca5";
         MessageBox.Show("Game Over!");
     }
 
     private void ClearEmptyCell()
     {
         IsEnabled = false;
-        Background = Brushes.LightGray;
         Content = _adjacentMines.ToString();
     }
     
