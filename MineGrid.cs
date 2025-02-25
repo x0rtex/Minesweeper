@@ -7,13 +7,13 @@ public class MineGrid : UniformGrid
 {
     private readonly Point _gridDimensions;
     private readonly int _mineCount;
-    private readonly Cell[,] _cells;
+    public Cell[,] Cells { get; }
 
     public MineGrid(Point gridDimensions, Point absoluteBoardDimensions, int mineCount)
     {
         _gridDimensions = gridDimensions;
         _mineCount = mineCount;
-        _cells = new Cell[gridDimensions.X, gridDimensions.Y];
+        Cells = new Cell[gridDimensions.X, gridDimensions.Y];
         
         Rows = gridDimensions.X;
         Columns = gridDimensions.Y;
@@ -36,7 +36,7 @@ public class MineGrid : UniformGrid
         for (int y = 0; y < _gridDimensions.Y; y++)
         {
             Cell cell = new Cell(new Point(x, y));
-            _cells[x, y] = cell;
+            Cells[x, y] = cell;
             Children.Add(cell);
 
             if (minePositions.Contains(cell.Pos))
@@ -66,12 +66,15 @@ public class MineGrid : UniformGrid
 
     private void UpdateAllAdjacentMines()
     {
-        foreach (Cell cell in _cells)
+        foreach (Cell cell in Cells)
             UpdateAdjacentMines(cell);
     }
     
     private void UpdateAdjacentMines(Cell cell)
     {
+        if (cell.IsMine)
+            return;
+        
         cell.AdjacentMines = 0;
     
         for (int offsetX = -1; offsetX <= 1; offsetX++)
@@ -81,7 +84,7 @@ public class MineGrid : UniformGrid
             if (IsItselfOrOutsideBoard(cell.Pos, adjacent))
                 continue;
             
-            Cell adjacentCell = _cells[adjacent.X, adjacent.Y];
+            Cell adjacentCell = Cells[adjacent.X, adjacent.Y];
             if (adjacentCell.IsMine) 
                 cell.AdjacentMines++;
         }

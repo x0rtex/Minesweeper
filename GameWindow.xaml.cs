@@ -8,7 +8,7 @@ namespace Minesweeper
     public partial class GameWindow
     {
         private readonly DifficultyLevel _difficulty;
-        private readonly DispatcherTimer _dispatcherTimer;
+        private readonly DispatcherTimer _gameTimer;
         private TimeSpan _time;
         
         public GameWindow(DifficultyLevel selectedDifficulty)
@@ -16,8 +16,8 @@ namespace Minesweeper
             InitializeComponent();
 
             _difficulty = selectedDifficulty;
-            _dispatcherTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(1) };
-            _dispatcherTimer.Tick += DispatcherTimer_Tick;
+            _gameTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(1) };
+            _gameTimer.Tick += GameTimerTick;
 
             InitializeGame();
         }
@@ -35,13 +35,13 @@ namespace Minesweeper
             board.Children.Add(mineGrid);
             BrdrMineGrid.Child = board;
             
-            _dispatcherTimer.Start();
+            _gameTimer.Start();
         }
 
-        private void DispatcherTimer_Tick(object? sender, EventArgs e)
+        private void GameTimerTick(object? sender, EventArgs e)
         {
             if (_time == TimeSpan.FromSeconds(999)) 
-                _dispatcherTimer.Stop();
+                _gameTimer.Stop();
             else
             {
                 _time = _time.Add(TimeSpan.FromSeconds(1));

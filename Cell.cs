@@ -45,13 +45,37 @@ public class Cell : Button
         IsEnabled = false;
         Foreground = Brushes.Red;
         Content = "\ud83d\udca5";
+        EndGame();
+    }
+
+    private void EndGame()
+    {
         MessageBox.Show("Game Over!");
+        ClearAllCells();
+    }
+
+    private void ClearAllCells()
+    {
+        MineGrid mineGrid = (MineGrid)Parent;
+        foreach (Cell cell in mineGrid.Cells)
+        {
+            if (cell == this)
+                continue;
+            if (!cell.IsMine)
+                cell.ClearEmptyCell();
+            else
+            {
+                cell.IsEnabled = false;
+                cell.Foreground = Brushes.Black;
+                cell.Content = "\ud83d\udca3";
+            }
+        }
     }
 
     private void ClearEmptyCell()
     {
         IsEnabled = false;
-        Content = _adjacentMines.ToString();
+        Content = _adjacentMines != 0 ? _adjacentMines.ToString() : "";
     }
     
     private SolidColorBrush GetColor()
