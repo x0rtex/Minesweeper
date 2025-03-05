@@ -12,16 +12,7 @@ public class Cell : Button
     public bool IsFlagged { get; set; }  // TODO: Unused IsFlagged property 
     private int _adjacentMines;
 
-    private Cell(Point pos)
-    {
-        Pos = pos;
-        Margin = new Thickness(1);
-        Background = Brushes.White;
-        FontWeight = FontWeights.Bold;
-    }
-    
-    public static Cell CreateCell(Point position) => new Cell(position);
-    
+    // Gets or sets the number of adjacent mines
     public int AdjacentMines
     {
         get => _adjacentMines;
@@ -31,23 +22,40 @@ public class Cell : Button
             Foreground = GetColor();
         }
     }
-
-    protected override void OnClick()
+    
+    // Constructor
+    private Cell(Point pos)
     {
-        CheckCell();
-        ((MineGrid)Parent).ClearEmptyAdjacentCells(this);
+        Pos = pos;
+        Margin = new Thickness(1);
+        FontSize = 18;
+        Background = Brushes.White;
+        FontWeight = FontWeights.Bold;
     }
     
+    // Returns a new cell
+    public static Cell CreateCell(Point position) => new(position);
+    
+    // Handles cell click
+    protected override void OnClick()
+    {
+        // TODO: First click must be safe
+        CheckCell();
+        ((MineGrid)Parent).RevealEmptyAdjacentCells(this);
+    }
+    
+    // Checks if a cell is a mine or not
     private void CheckCell()
     {
         if (IsMine)
             ExplodeMineCell();
         else
-            ClearEmptyCell();
+            RevealEmptyCell();
     }
     
     // TODO: Right click to flag cell
 
+    // Explodes a mine
     private void ExplodeMineCell()
     {
         IsEnabled = false;
@@ -56,13 +64,15 @@ public class Cell : Button
         EndGame();
     }
 
+    // Show game over and reveal all cells
     private void EndGame()
     {
         MessageBox.Show("Game Over!");
-        ClearAllCells();
+        RevealAllCells();
     }
 
-    private void ClearAllCells()
+    // Reveals all cells on the board
+    private void RevealAllCells()
     {
         MineGrid mineGrid = (MineGrid)Parent;
         foreach (Cell cell in mineGrid.Cells)
@@ -70,7 +80,7 @@ public class Cell : Button
             if (cell == this)
                 continue;
             if (!cell.IsMine)
-                cell.ClearEmptyCell();
+                cell.RevealEmptyCell();
             else
             {
                 cell.IsEnabled = false;
@@ -80,12 +90,14 @@ public class Cell : Button
         }
     }
 
-    public void ClearEmptyCell()
+    // Reveals an empty cell (no mine)
+    public void RevealEmptyCell()
     {
         IsEnabled = false;
         Content = _adjacentMines != 0 ? _adjacentMines.ToString() : "";
     }
     
+    // Returns a color based on the number of adjacent mines
     private SolidColorBrush GetColor()
     {
         if (IsMine)

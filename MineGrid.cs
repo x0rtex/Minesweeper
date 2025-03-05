@@ -9,6 +9,7 @@ public class MineGrid : UniformGrid
     private readonly int _mineCount;
     public Cell[,] Cells { get; }
 
+    // Constructor
     public MineGrid(Point gridDimensions, Point absoluteBoardDimensions, int mineCount)
     {
         _gridDimensions = gridDimensions;
@@ -20,13 +21,15 @@ public class MineGrid : UniformGrid
         Width = absoluteBoardDimensions.Y;
         Height = absoluteBoardDimensions.X;
     }
-
+    
+    // Generates cells and updates their adjacent mines
     public void PrepareBoard()
     {
         GenerateCells();
         UpdateAllAdjacentMines();
     }
 
+    // Generates all cells
     private void GenerateCells()
     {
         List<Point> cellPositions = CreateAllCellPositions(_gridDimensions);
@@ -44,6 +47,7 @@ public class MineGrid : UniformGrid
         }
     }
 
+    // Creates a list of all cell positions
     private static List<Point> CreateAllCellPositions(Point gridDimensions)
     {
         List<Point> cellPositions = [];
@@ -54,6 +58,7 @@ public class MineGrid : UniformGrid
         return cellPositions;
     }
     
+    // Creates a list of random mine positions
     private List<Point> CreateMinePositions(List<Point> cellPositions)
     {
         Random random = new Random();
@@ -64,12 +69,14 @@ public class MineGrid : UniformGrid
             .ToList();
     }
 
+    // Updates the number of adjacent mines for all cells
     private void UpdateAllAdjacentMines()
     {
         foreach (Cell cell in Cells)
             UpdateAdjacentMines(cell);
     }
     
+    // Updates the number of adjacent mines for a given cell
     private void UpdateAdjacentMines(Cell cell)
     {
         if (cell.IsMine)
@@ -81,27 +88,27 @@ public class MineGrid : UniformGrid
             cell.AdjacentMines++;
     }
 
-    public void ClearEmptyAdjacentCells(Cell cell)
+    // Recursively reveals cells with 0 adjacent mines, and their adjacent cells
+    public void RevealEmptyAdjacentCells(Cell cell)
     {
         foreach (Cell adjCell in GetAdjacentCells(cell)
                      .Where(a => a is { IsMine: false, IsEnabled: true })
-                 )
+                )
         {
             if (adjCell.AdjacentMines == 0)
             {
-                adjCell.ClearEmptyCell();
-                ClearEmptyAdjacentCells(adjCell);
-                break;
+                adjCell.RevealEmptyCell();
+                RevealEmptyAdjacentCells(adjCell);
             }
 
             if (cell.AdjacentMines != 0) 
                 continue;
-            
-            adjCell.ClearEmptyCell();
-            break;
+        
+            adjCell.RevealEmptyCell();
         }
     }
 
+    // Returns the adjacent cells of a given cell
     private HashSet<Cell> GetAdjacentCells(Cell cell)
     {
         HashSet<Cell> adjacentCells = [];
@@ -119,6 +126,7 @@ public class MineGrid : UniformGrid
         return adjacentCells;
     }
 
+    // Checks if a cell is itself or lies outside the board
     private bool IsItselfOrOutsideBoard(Point cellPos, Point adj)
     {
         bool isItself = adj.X == cellPos.X && adj.Y == cellPos.Y;
