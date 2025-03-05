@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800"
+        Style="{StaticResource MaterialDesignWindow}"
         SizeToContent="WidthAndHeight" MinWidth="400" MinHeight="300">
     <Grid>
         <Grid.RowDefinitions>
@@ -38,7 +39,8 @@
                 Grid.Row="3"
                 Content="Start" 
                 FontSize="36"
-                Width="120"
+                Width="140"
+                Height="60"
                 HorizontalAlignment="Center"
                 Click="Button_Click"/>
     </Grid>

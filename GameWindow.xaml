@@ -8,6 +8,7 @@
         SizeToContent="WidthAndHeight"
         MinWidth="800"
         MinHeight="450"
+        Style="{StaticResource MaterialDesignWindow}"
         WindowStartupLocation="CenterScreen">
 
     <Grid>
@@ -35,15 +36,15 @@
                         VerticalAlignment="Center"
                         Margin="10,0">
                 <Button x:Name="BtnBack" 
-                        Content="&lt;=" 
-                        Width="40"
+                        Content="⬅️" 
+                        Width="50"
                         Height="30"
                         Margin="0,0,5,0"
                         Click="BtnBack_Click"/>
 
                 <Button x:Name="BtnRestart" 
-                        Content=":)" 
-                        Width="40"
+                        Content="🙂" 
+                        Width="50"
                         Height="30"
                         Click="BtnRestart_Click"/>
             </StackPanel>
@@ -62,7 +63,7 @@
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center">
             <Grid Width="512" Height="512">
-                <UniformGrid x:Name="MineGrid"
+                <UniformGrid
                     Rows="16" Columns="16"
                     Width="512" Height="512">
                 </UniformGrid>
