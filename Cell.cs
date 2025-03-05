@@ -9,16 +9,18 @@ public class Cell : Button
 {
     public Point Pos { get; }
     public bool IsMine { get; set; }
-    public bool IsFlagged { get; set; }
+    public bool IsFlagged { get; set; }  // TODO: Unused IsFlagged property 
     private int _adjacentMines;
 
-    public Cell(Point pos)
+    private Cell(Point pos)
     {
         Pos = pos;
         Margin = new Thickness(1);
         Background = Brushes.White;
         FontWeight = FontWeights.Bold;
     }
+    
+    public static Cell CreateCell(Point position) => new Cell(position);
     
     public int AdjacentMines
     {
@@ -30,8 +32,12 @@ public class Cell : Button
         }
     }
 
-    protected override void OnClick() => CheckCell();
-
+    protected override void OnClick()
+    {
+        CheckCell();
+        ((MineGrid)Parent).ClearEmptyAdjacentCells(this);
+    }
+    
     private void CheckCell()
     {
         if (IsMine)
@@ -39,6 +45,8 @@ public class Cell : Button
         else
             ClearEmptyCell();
     }
+    
+    // TODO: Right click to flag cell
 
     private void ExplodeMineCell()
     {
@@ -72,7 +80,7 @@ public class Cell : Button
         }
     }
 
-    private void ClearEmptyCell()
+    public void ClearEmptyCell()
     {
         IsEnabled = false;
         Content = _adjacentMines != 0 ? _adjacentMines.ToString() : "";

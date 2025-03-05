@@ -35,7 +35,7 @@ public class MineGrid : UniformGrid
         for (int x = 0; x < _gridDimensions.X; x++)
         for (int y = 0; y < _gridDimensions.Y; y++)
         {
-            Cell cell = new Cell(new Point(x, y));
+            Cell cell = Cell.CreateCell(new Point(x, y));
             Cells[x, y] = cell;
             Children.Add(cell);
 
@@ -76,7 +76,36 @@ public class MineGrid : UniformGrid
             return;
         
         cell.AdjacentMines = 0;
-    
+        HashSet<Cell> adjacentCells = GetAdjacentCells(cell);
+        foreach (Cell _ in adjacentCells.Where(adjacentCell => adjacentCell.IsMine))
+            cell.AdjacentMines++;
+    }
+
+    public void ClearEmptyAdjacentCells(Cell cell)
+    {
+        foreach (Cell adjCell in GetAdjacentCells(cell)
+                     .Where(a => a is { IsMine: false, IsEnabled: true })
+                 )
+        {
+            if (adjCell.AdjacentMines == 0)
+            {
+                adjCell.ClearEmptyCell();
+                ClearEmptyAdjacentCells(adjCell);
+                break;
+            }
+
+            if (cell.AdjacentMines != 0) 
+                continue;
+            
+            adjCell.ClearEmptyCell();
+            break;
+        }
+    }
+
+    private HashSet<Cell> GetAdjacentCells(Cell cell)
+    {
+        HashSet<Cell> adjacentCells = [];
+        
         for (int offsetX = -1; offsetX <= 1; offsetX++)
         for (int offsetY = -1; offsetY <= 1; offsetY++)
         {
@@ -84,10 +113,10 @@ public class MineGrid : UniformGrid
             if (IsItselfOrOutsideBoard(cell.Pos, adjacent))
                 continue;
             
-            Cell adjacentCell = Cells[adjacent.X, adjacent.Y];
-            if (adjacentCell.IsMine) 
-                cell.AdjacentMines++;
+            adjacentCells.Add(Cells[adjacent.X, adjacent.Y]);
         }
+
+        return adjacentCells;
     }
 
     private bool IsItselfOrOutsideBoard(Point cellPos, Point adj)
