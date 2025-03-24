@@ -108,15 +108,26 @@ public class MineGrid : UniformGrid
         {
             if (adjCell.AdjacentMines == 0)
             {
-                adjCell.RevealEmptyCell();
+                ForceUnFlagAndRevealCell(adjCell);
                 RevealEmptyAdjacentCells(adjCell);
             }
 
             if (cell.AdjacentMines != 0)
                 continue;
 
+            if (adjCell.IsFlagged)
+                adjCell.UnFlagCell();
+            
             adjCell.RevealEmptyCell();
         }
+    }
+
+    private static void ForceUnFlagAndRevealCell(Cell cell)
+    {
+        if (cell.IsFlagged)
+            cell.UnFlagCell();
+
+        cell.RevealEmptyCell();
     }
 
     // Returns the adjacent cells of a given cell.

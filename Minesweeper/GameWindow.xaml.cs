@@ -1,4 +1,5 @@
-﻿using System;
+﻿#nullable enable
+using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
@@ -10,6 +11,7 @@ public partial class GameWindow
     private readonly DifficultyLevel _difficulty;
     private readonly DispatcherTimer _gameTimer;
     private TimeSpan _time;
+    private int _currentMineCount;
 
     // Constructor
     public GameWindow(DifficultyLevel selectedDifficulty)
@@ -19,6 +21,8 @@ public partial class GameWindow
         _difficulty = selectedDifficulty;
         _gameTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(1) };
         _gameTimer.Tick += GameTimerTick;
+        
+        AddHandler(Cell.FlagToggledEvent, new RoutedEventHandler(OnCellFlagToggled));
 
         InitializeGame();
     }
@@ -28,6 +32,7 @@ public partial class GameWindow
     {
         (Point gridDimensions, int mineCount) = Difficulty.GetGridSizeAndMineCount(_difficulty);
         Point absoluteBoardDimensions = Difficulty.GetAbsoluteBoardSize(gridDimensions);
+        _currentMineCount = mineCount;
         TblkMines.Text = $"Mines: {mineCount}";
 
         Grid board = new() { Width = absoluteBoardDimensions.Y, Height = absoluteBoardDimensions.X };
@@ -50,6 +55,25 @@ public partial class GameWindow
             _time = _time.Add(TimeSpan.FromSeconds(1));
             TblkTimer.Text = $"Timer: {_time.Seconds:000}";
         }
+    }
+    
+    // Adjusts mine count when a cell is flagged
+    private void OnCellFlagToggled(object sender, RoutedEventArgs e)
+    {
+        if (e is not FlagToggledEventArgs flagEvent) 
+            return;
+        
+        if (flagEvent.IsFlagged)
+            AdjustMineCount(-1);
+        else
+            AdjustMineCount(1);
+    }
+    
+    // Increments mine count up or down by amount
+    private void AdjustMineCount(int amount)
+    {
+        _currentMineCount += amount;
+        TblkMines.Text = $"Mines: {_currentMineCount}";
     }
 
     // Opens new game window and closes current game window
