@@ -115,10 +115,7 @@ public class MineGrid : UniformGrid
             if (cell.AdjacentMines != 0)
                 continue;
 
-            if (adjCell.IsFlagged)
-                adjCell.UnFlagCell();
-            
-            adjCell.RevealEmptyCell();
+            ForceUnFlagAndRevealCell(adjCell);
         }
     }
 
