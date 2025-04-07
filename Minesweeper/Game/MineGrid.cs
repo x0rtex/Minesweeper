@@ -96,8 +96,8 @@ public class MineGrid : UniformGrid
             cell.AdjacentMines++;
     }
 
-    // Reveals empty cells around a given cell that was clicked
-    // Recursively reveals cells with 0 adjacent mines, as well as their adjacent cells
+    // Reveal empty cells around a given cell that was clicked
+    // Recursively reveal cells with 0 adjacent mines, as well as their adjacent cells
     public void RevealEmptyAdjacentCells(Cell cell)
     {
         // Checking against struct, suggested by Rider IDE
@@ -127,7 +127,7 @@ public class MineGrid : UniformGrid
         cell.RevealEmptyCell();
     }
 
-    // Returns the adjacent cells of a given cell.
+    // Return the adjacent cells of a given cell.
     private HashSet<Cell> GetAdjacentCells(Cell cell)
     {
         HashSet<Cell> adjacentCells = [];
@@ -146,14 +146,12 @@ public class MineGrid : UniformGrid
     }
 
     // Checks if a cell is itself or lies outside the board
-    private bool IsItselfOrOutsideBoard(Point cellPos, Point adj)
+    private bool IsItselfOrOutsideBoard(Point cellPos, Point adjacent)
     {
-        bool isItself = adj.X == cellPos.X && adj.Y == cellPos.Y;
-        bool isOutsideBoard = adj.X < 0 
-                              || adj.Y < 0 
-                              || adj.X >= _gridDimensions.X 
-                              || adj.Y >= _gridDimensions.Y;
-
-        return isItself || isOutsideBoard;
+        return cellPos == adjacent
+               || adjacent.X < 0 
+               || adjacent.Y < 0 
+               || adjacent.X >= _gridDimensions.X 
+               || adjacent.Y >= _gridDimensions.Y;
     }
 }

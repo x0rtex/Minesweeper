@@ -80,6 +80,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="LoginWindow.xaml" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -88,8 +89,10 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Data\Authentication.cs" />
     <Compile Include="Data\MinesweeperData.cs" />
     <Compile Include="Data\SavedGame.cs" />
+    <Compile Include="Data\Session.cs" />
     <Compile Include="Data\User.cs" />
     <Compile Include="Data\UserStats.cs" />
     <Compile Include="Game\Cell.cs" />
@@ -99,6 +102,9 @@
     </Compile>
     <Compile Include="Game\FlagToggledEventArgs.cs" />
     <Compile Include="Game\GameState.cs" />
+    <Compile Include="LoginWindow.xaml.cs">
+      <DependentUpon>LoginWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -107,6 +113,15 @@
   <ItemGroup>
     <Compile Include="Game\MineGrid.cs" />
     <Compile Include="Game\Point.cs" />
+    <Compile Include="Migrations\202503101912108_InitialCreate.cs" />
+    <Compile Include="Migrations\202503101912108_InitialCreate.Designer.cs">
+      <DependentUpon>202503101912108_InitialCreate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202504071151224_UserPassword.cs" />
+    <Compile Include="Migrations\202504071151224_UserPassword.Designer.cs">
+      <DependentUpon>202504071151224_UserPassword.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -120,6 +135,12 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <EmbeddedResource Include="Migrations\202503101912108_InitialCreate.resx">
+      <DependentUpon>202503101912108_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202504071151224_UserPassword.resx">
+      <DependentUpon>202504071151224_UserPassword.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>

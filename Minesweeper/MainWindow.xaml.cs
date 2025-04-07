@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows;
+using Minesweeper.Data;
 
 namespace Minesweeper;
 
@@ -13,6 +14,11 @@ public partial class MainWindow
         CbxDifficulty.ItemsSource = difficulties;
         CbxDifficulty.SelectedIndex = 0;
     }
+    
+    private void MainWindow_Loaded(object sender, RoutedEventArgs e)
+    {
+        UpdateLoginDisplay();
+    }
 
     // Starts the game - opens a new game window and closes the main window 
     private void Button_Click(object sender, RoutedEventArgs e)
@@ -24,5 +30,33 @@ public partial class MainWindow
 
         new GameWindow(difficulty).Show();
         Close();
+    }
+
+    private void BtnLogin_Click(object sender, RoutedEventArgs e)
+    {
+        if (Session.CurrentUser == null)
+        {
+            new LoginWindow().ShowDialog();
+        }
+        else
+        {
+            // Log out
+            Session.CurrentUser = null;
+        }
+        UpdateLoginDisplay();
+    }
+    
+    private void UpdateLoginDisplay()
+    {
+        if (Session.CurrentUser != null)
+        {
+            LblUser.Content = "Logged in as: " + Session.CurrentUser.Name;
+            BtnLogin.Content = "Log Out";
+        }
+        else
+        {
+            LblUser.Content = "Not logged in";
+            BtnLogin.Content = "Login";
+        }
     }
 }
