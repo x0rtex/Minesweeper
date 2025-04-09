@@ -1,14 +1,16 @@
-﻿using System.Linq;
+﻿using System.Data.Entity;
+using System.Threading.Tasks;
 
 namespace Minesweeper.Data;
 
-public class Authentication
+public static class Authentication
 {
-    public static bool RegisterUser(string username, string password)
+    public static async Task<bool> RegisterUser(string username, string password)
     {
         using var db = new MinesweeperData();
         
-        if (db.Users.Any(u => u.Name == username))
+        if (await db.Users
+                .AnyAsync(u => u.Name == username))
             return false;
 
         var user = new User
@@ -16,15 +18,19 @@ public class Authentication
             Name = username,
             Password = PasswordHasher.HashPassword(password)
         };
+        
         db.Users.Add(user);
-        db.SaveChanges();
+        await db.SaveChangesAsync();
         return true;
     }
 
-    public static bool LoginUser(string username, string password)
+    public static async Task<bool> LoginUser(string username, string password)
     {
         using var db = new MinesweeperData();
-        var user = db.Users.FirstOrDefault(u => u.Name == username);
+        
+        var user = await db.Users
+            .FirstOrDefaultAsync(u => u.Name == username);
+        
         return user != null && PasswordHasher.VerifyPassword(password, user.Password);
     }
 }

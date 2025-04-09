@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Data.Entity;
+using System.Linq;
 using System.Windows;
 using Minesweeper.Data;
 
@@ -6,46 +8,55 @@ namespace Minesweeper;
 
 public partial class LoginWindow
 {
-    public LoginWindow()
-    {
-        InitializeComponent();
-    }
+    public LoginWindow() => InitializeComponent();
 
-    private void BtnLogin_Click(object sender, RoutedEventArgs e)
+    private async void BtnLogin_Click(object sender, RoutedEventArgs e)
     {
-        string username = TxtUsername.Text;
-        string password = TxtPassword.Password;
-
-        if (Authentication.LoginUser(username, password))
+        try
         {
-            using var db = new MinesweeperData();
-            
-            var user = db.Users
-                .SingleOrDefault(u => u.Name == username);
+            string username = TxtUsername.Text;
+            string password = TxtPassword.Password;
 
-            if (user != null)
+            if (await Authentication.LoginUser(username, password))
             {
-                Session.CurrentUser = user; // Set the full user object from the database
-                MessageBox.Show("Login successful!");
-                Close();
+                using var db = new MinesweeperData();
+            
+                var user = await db.Users
+                    .SingleOrDefaultAsync(u => u.Name == username);
+
+                if (user != null)
+                {
+                    Session.CurrentUser = user;
+                    MessageBox.Show("Login successful!");
+                    Close();
+                }
+                else
+                    MessageBox.Show("User not found in the database.");
             }
             else
-            {
-                MessageBox.Show("User not found in the database.");
-            }
+                MessageBox.Show("Invalid username or password.");
         }
-        else
+        catch (Exception error)
         {
-            MessageBox.Show("Invalid username or password.");
+            Console.WriteLine($@"Error occured: {error.Message}");
+            throw; // TODO handle exception
         }
     }
 
-    private void BtnRegister_Click(object sender, RoutedEventArgs e)
+    private async void BtnRegister_Click(object sender, RoutedEventArgs e)
     {
-        string username = TxtUsername.Text;
-        string password = TxtPassword.Password;
+        try
+        {
+            string username = TxtUsername.Text;
+            string password = TxtPassword.Password;
 
-        MessageBox.Show(Authentication.RegisterUser(username, password) 
-            ? "Registration successful!" : "Username already exists.");
+            MessageBox.Show(await Authentication.RegisterUser(username, password) 
+                ? "Registration successful!" : "Username already exists.");
+        }
+        catch (Exception error)
+        {
+            Console.WriteLine($@"Error occured: {error.Message}");
+            throw; // TODO handle exception
+        }
     }
 }

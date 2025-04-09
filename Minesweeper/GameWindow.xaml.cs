@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Data.Entity;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
@@ -47,11 +49,11 @@ public partial class GameWindow
     }
 
     // Update game information to database
-    private void UpdateSavedGame(GameState newState)
+    private async Task UpdateSavedGame(GameState newState)
     {
         using var db = new MinesweeperData();
 
-        int? userId = GetCurrentUserId(db);
+        int? userId = await GetCurrentUserId(db);
 
         var savedGame = new SavedGame
         {
@@ -62,19 +64,20 @@ public partial class GameWindow
         };
 
         db.SavedGames.Add(savedGame);
-        db.SaveChanges();
+        await db.SaveChangesAsync();
         
         UserStatsUpdater.UpdateUserStats();
     }
     
     
     // Retrieve the current user ID from the session
-    private static int? GetCurrentUserId(MinesweeperData db)
+    private static async Task<int?> GetCurrentUserId(MinesweeperData db)
     {
         if (Session.CurrentUser == null)
             return null;
         
-        var user = db.Users.SingleOrDefault(u => u.Id == Session.CurrentUser.Id);
+        var user = await db.Users
+            .SingleOrDefaultAsync(u => u.Id == Session.CurrentUser.Id);
         
         if (user != null) 
             return user.Id;
@@ -85,19 +88,27 @@ public partial class GameWindow
     }
     
     // Handle game win event
-    private void OnGameWon()
+    private async Task OnGameWon()
     {
-        MessageBox.Show("You won!");
-        _gameTimer.Stop();
-        UpdateSavedGame(GameState.Won);
+        try
+        {
+            MessageBox.Show("You won!");
+            _gameTimer.Stop();
+            await UpdateSavedGame(GameState.Won);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine($@"Error occured: {e.Message}");
+            throw; // TODO handle exception
+        }
     }
 
     // Handle game loss event
-    public void OnGameLost()
+    public async Task OnGameLost()
     {
         MessageBox.Show("Game Over!");
         _gameTimer.Stop();
-        UpdateSavedGame(GameState.Lost);
+        await UpdateSavedGame(GameState.Lost);
     }
 
     // Increment timer by 1 every second (caps at 999 - faithful to original game)

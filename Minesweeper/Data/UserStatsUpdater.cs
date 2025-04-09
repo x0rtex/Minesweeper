@@ -1,15 +1,17 @@
-﻿using System.Linq;
+﻿using System.Data.Entity;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Minesweeper.Data;
 
 public static class UserStatsUpdater
 {
-    public static void UpdateUserStats()
+    public static async Task UpdateUserStats()
     {
         using var db = new MinesweeperData();
 
         // Group saved games by UserId and calculate stats
-        var userStatsData = db.SavedGames
+        var userStatsData = await db.SavedGames
             .Where(sg => sg.UserId != null) // Exclude guest games
             .GroupBy(sg => sg.UserId)
             .Select(group => new
@@ -31,7 +33,7 @@ public static class UserStatsUpdater
                         .Average(sg => sg.ElapsedTime) 
                     : 0
             })
-            .ToList();
+            .ToListAsync();
 
         // Update or create UserStats for each user
         foreach (var stats in userStatsData)
@@ -61,6 +63,6 @@ public static class UserStatsUpdater
             }
         }
 
-        db.SaveChanges();
+        await db.SaveChangesAsync();
     }
 }
