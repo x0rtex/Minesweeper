@@ -156,4 +156,16 @@ public class MineGrid : UniformGrid
                || adjacent.X >= _gridDimensions.X 
                || adjacent.Y >= _gridDimensions.Y;
     }
+    
+    // Reveals remaining cells that are not flagged and not mines
+    public void RevealRemainingCells()
+    {
+        for (int x = 0; x < Cells.GetLength(0); x++)
+            for (int y = 0; y < Cells.GetLength(1); y++)
+            {
+                Cell cell = Cells[x, y];
+                if (cell is { IsMine: false, IsFlagged: false, IsEnabled: true })
+                    cell.RevealEmptyCell();
+            }
+    }
 }

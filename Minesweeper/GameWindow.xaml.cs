@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data.Entity;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -90,13 +91,20 @@ public partial class GameWindow
     {
         try
         {
-            MessageBox.Show("You won!");
             _gameTimer.Stop();
-            await UpdateSavedGame(GameState.Won);
+            
+            // Use Dispatcher to access UI elements
+            await Application.Current.Dispatcher.Invoke(async () =>
+            {
+                MineGrid? mineGrid = GetMineGrid();
+                mineGrid?.RevealRemainingCells(); // UI operation
+                await UpdateSavedGame(GameState.Won);
+                MessageBox.Show("You won!");
+            });
         }
         catch (Exception e)
         {
-            Console.WriteLine($@"Error occured: {e.Message}");
+            Console.WriteLine($@"Error occurred: {e.Message}");
             throw; // TODO handle exception
         }
     }
@@ -104,9 +112,9 @@ public partial class GameWindow
     // Handle game loss event
     public async Task OnGameLost()
     {
-        MessageBox.Show("Game Over!");
         _gameTimer.Stop();
         await UpdateSavedGame(GameState.Lost);
+        MessageBox.Show("Game Over!");
     }
 
     // Increment timer by 1 every second (caps at 999 - faithful to original game)
@@ -138,9 +146,35 @@ public partial class GameWindow
     {
         _currentMineCount += amount;
         TblkMines.Text = $"Mines: {_currentMineCount}";
+
+        if (_currentMineCount != 0) 
+            return;
         
-        if (_currentMineCount == 0)
+        bool isGameWon = CheckAllFlagsCorrect();
+        if (isGameWon)
             _ = Task.Run(async () => await OnGameWon());
+    }
+    
+    // Check if all mines are flagged correctly
+    private bool CheckAllFlagsCorrect()
+    {
+        MineGrid? mineGrid = GetMineGrid();
+        
+        return mineGrid != null && mineGrid.Cells
+            .Cast<Cell>()
+            .All(cell => 
+                    cell is { IsMine: true, IsFlagged: true } ||  // Mines must be flagged
+                    cell is { IsMine: false, IsFlagged: false }   // Non-mines must NOT be flagged
+            );
+    }
+    
+    // Return the mine grid instance
+    private MineGrid? GetMineGrid()
+    {
+        if (BrdrMineGrid.Child is not Grid board || board.Children.Count == 0)
+            return null;
+
+        return board.Children[0] as MineGrid;
     }
 
     // Open new game window and close current game window

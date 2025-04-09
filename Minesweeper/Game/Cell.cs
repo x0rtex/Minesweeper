@@ -75,6 +75,9 @@ public class Cell : Button
     protected override void OnClick()
     {
         // TODO: First click must be safe (i.e. no mine)
+        if (IsFlagged)
+            return;
+
         CheckCell();
         ((MineGrid)Parent).RevealEmptyAdjacentCells(this);
     }
