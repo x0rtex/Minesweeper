@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Data.Entity;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -65,8 +64,7 @@ public partial class GameWindow
 
         db.SavedGames.Add(savedGame);
         await db.SaveChangesAsync();
-        
-        UserStatsUpdater.UpdateUserStats();
+        await UserStatsUpdater.UpdateUserStats();
     }
     
     
@@ -142,7 +140,7 @@ public partial class GameWindow
         TblkMines.Text = $"Mines: {_currentMineCount}";
         
         if (_currentMineCount == 0)
-            OnGameWon();
+            _ = Task.Run(async () => await OnGameWon());
     }
 
     // Open new game window and close current game window
