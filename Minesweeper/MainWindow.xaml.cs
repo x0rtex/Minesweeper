@@ -35,14 +35,9 @@ public partial class MainWindow
     private void BtnLogin_Click(object sender, RoutedEventArgs e)
     {
         if (Session.CurrentUser == null)
-        {
             new LoginWindow().ShowDialog();
-        }
         else
-        {
-            // Log out
-            Session.CurrentUser = null;
-        }
+            Session.CurrentUser = null;  // Log out
         UpdateLoginDisplay();
     }
     

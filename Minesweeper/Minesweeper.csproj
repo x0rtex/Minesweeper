@@ -17,6 +17,7 @@
     <Deterministic>true</Deterministic>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -91,10 +92,12 @@
     </Compile>
     <Compile Include="Data\Authentication.cs" />
     <Compile Include="Data\MinesweeperData.cs" />
+    <Compile Include="Data\PasswordHasher.cs" />
     <Compile Include="Data\SavedGame.cs" />
     <Compile Include="Data\Session.cs" />
     <Compile Include="Data\User.cs" />
     <Compile Include="Data\UserStats.cs" />
+    <Compile Include="Data\UserStatsUpdater.cs" />
     <Compile Include="Game\Cell.cs" />
     <Compile Include="Game\Difficulty.cs" />
     <Compile Include="GameWindow.xaml.cs">
@@ -121,6 +124,10 @@
     <Compile Include="Migrations\202504071151224_UserPassword.Designer.cs">
       <DependentUpon>202504071151224_UserPassword.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202504091057261_NullableSavedGameUser.cs" />
+    <Compile Include="Migrations\202504091057261_NullableSavedGameUser.Designer.cs">
+      <DependentUpon>202504091057261_NullableSavedGameUser.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
@@ -140,6 +147,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202504071151224_UserPassword.resx">
       <DependentUpon>202504071151224_UserPassword.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202504091057261_NullableSavedGameUser.resx">
+      <DependentUpon>202504091057261_NullableSavedGameUser.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

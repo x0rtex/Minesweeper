@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -12,6 +10,7 @@ public class Cell : Button
     public Point Pos { get; }
     public bool IsMine { get; set; }
     private int _adjacentMines;
+    private readonly GameWindow _gameWindow;
 
     // Get or set the number of adjacent mines
     public int AdjacentMines
@@ -50,8 +49,9 @@ public class Cell : Button
             );
 
     // Constructor
-    private Cell(Point pos)
+    private Cell(Point pos, GameWindow gameWindow)
     {
+        _gameWindow = gameWindow; // Store the GameWindow reference
         Pos = pos;
         Margin = new Thickness(1);
         FontSize = 22;
@@ -60,7 +60,7 @@ public class Cell : Button
     }
 
     // Returns a new cell
-    public static Cell CreateCell(Point position) => new(position);
+    public static Cell CreateCell(Point position, GameWindow gameWindow) => new(position, gameWindow);
 
     // Checks if a cell is a mine or not
     private void CheckCell()
@@ -124,7 +124,7 @@ public class Cell : Button
     // Show game over and reveal all cells
     private void EndGame()
     {
-        MessageBox.Show("Game Over!");
+        _gameWindow.OnGameLost(); // Explicitly call OnGameLost
         RevealAllCells();
     }
 

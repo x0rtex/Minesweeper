@@ -9,15 +9,17 @@ public class MineGrid : UniformGrid
 {
     private readonly Point _gridDimensions;
     private readonly int _mineCount;
+    private readonly GameWindow _gameWindow;
 
     // 2D array of cells
     public Cell[,] Cells { get; }
 
     // Constructor
-    public MineGrid(Point gridDimensions, Point absoluteBoardDimensions, int mineCount)
+    public MineGrid(Point gridDimensions, Point absoluteBoardDimensions, int mineCount, GameWindow gameWindow)
     {
         _gridDimensions = gridDimensions;
         _mineCount = mineCount;
+        _gameWindow = gameWindow; // Store the GameWindow reference
         Cells = new Cell[gridDimensions.X, gridDimensions.Y];
 
         Rows = gridDimensions.X;
@@ -46,7 +48,7 @@ public class MineGrid : UniformGrid
         for (int x = 0; x < _gridDimensions.X; x++)
             for (int y = 0; y < _gridDimensions.Y; y++)
             {
-                Cell cell = Cell.CreateCell(new Point(x, y));
+                Cell cell = Cell.CreateCell(new Point(x, y), _gameWindow);
                 Cells[x, y] = cell;
                 Children.Add(cell);
 

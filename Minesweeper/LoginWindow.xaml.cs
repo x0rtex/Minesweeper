@@ -1,16 +1,14 @@
-﻿using System.Windows;
+﻿using System.Linq;
+using System.Windows;
 using Minesweeper.Data;
 
 namespace Minesweeper;
 
-public partial class LoginWindow : Window
+public partial class LoginWindow
 {
-    private readonly Authentication _auth;
-    
     public LoginWindow()
     {
         InitializeComponent();
-        _auth = new Authentication();
     }
 
     private void BtnLogin_Click(object sender, RoutedEventArgs e)
@@ -20,14 +18,26 @@ public partial class LoginWindow : Window
 
         if (Authentication.LoginUser(username, password))
         {
-            var user = new User { Name = username }; 
-            Session.CurrentUser = user;
+            using var db = new MinesweeperData();
+            
+            var user = db.Users
+                .SingleOrDefault(u => u.Name == username);
 
-            MessageBox.Show("Login successful!");
-            Close();
+            if (user != null)
+            {
+                Session.CurrentUser = user; // Set the full user object from the database
+                MessageBox.Show("Login successful!");
+                Close();
+            }
+            else
+            {
+                MessageBox.Show("User not found in the database.");
+            }
         }
         else
+        {
             MessageBox.Show("Invalid username or password.");
+        }
     }
 
     private void BtnRegister_Click(object sender, RoutedEventArgs e)

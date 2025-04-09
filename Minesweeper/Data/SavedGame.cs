@@ -7,6 +7,6 @@ public class SavedGame
     public DifficultyLevel Difficulty { get; set; }
     public GameState GameState { get; set; }
 
-    public int UserId { get; set; }
-    public virtual User User { get; set; }
+    public int? UserId { get; set; }
+    public virtual User? User { get; set; }
 }

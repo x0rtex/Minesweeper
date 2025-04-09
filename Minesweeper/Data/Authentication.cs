@@ -14,7 +14,7 @@ public class Authentication
         var user = new User
         {
             Name = username,
-            Password = password
+            Password = PasswordHasher.HashPassword(password)
         };
         db.Users.Add(user);
         db.SaveChanges();
@@ -25,6 +25,6 @@ public class Authentication
     {
         using var db = new MinesweeperData();
         var user = db.Users.FirstOrDefault(u => u.Name == username);
-        return user != null && user.Password == password;
+        return user != null && PasswordHasher.VerifyPassword(password, user.Password);
     }
 }
