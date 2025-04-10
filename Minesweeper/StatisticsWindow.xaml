@@ -1,0 +1,44 @@
+﻿<Window x:Class="Minesweeper.StatisticsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="Statistics" Height="650" Width="1200">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        
+        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="10">
+            <TextBlock Text="Global Statistics" FontSize="24"/>
+        </StackPanel>
+        
+        <Grid Grid.Row="1" x:Name="StatsGrid">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            
+            <DataGrid Grid.Column="0" x:Name="GlobalStatsDataGrid" Margin="10" AutoGenerateColumns="False">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="User" Binding="{Binding User.Name}" Width="*"/>
+                    <DataGridTextColumn Header="Total Games" Binding="{Binding TotalGamesPlayed}" Width="Auto"/>
+                    <DataGridTextColumn Header="Wins" Binding="{Binding Wins}" Width="Auto"/>
+                    <DataGridTextColumn Header="Losses" Binding="{Binding Losses}" Width="Auto"/>
+                    <DataGridTextColumn Header="Average Time" Binding="{Binding AverageTime}" Width="Auto"/>
+                </DataGrid.Columns>
+            </DataGrid>
+            <DataGrid Grid.Column="1" x:Name="UserStatsDataGrid" Margin="10" AutoGenerateColumns="False">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="User" Binding="{Binding User.Name}" Width="*"/>
+                    <DataGridTextColumn Header="Total Games" Binding="{Binding TotalGamesPlayed}" Width="Auto"/>
+                    <DataGridTextColumn Header="Wins" Binding="{Binding Wins}" Width="Auto"/>
+                    <DataGridTextColumn Header="Losses" Binding="{Binding Losses}" Width="Auto"/>
+                    <DataGridTextColumn Header="Average Time" Binding="{Binding AverageTime}" Width="Auto"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </Grid>
+    </Grid>
+</Window>

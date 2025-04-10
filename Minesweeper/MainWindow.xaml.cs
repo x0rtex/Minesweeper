@@ -21,7 +21,7 @@ public partial class MainWindow
     }
 
     // Starts the game - opens a new game window and closes the main window 
-    private void Button_Click(object sender, RoutedEventArgs e)
+    private void BtnStart_Click(object sender, RoutedEventArgs e)
     {
         if (CbxDifficulty.SelectedIndex == -1)
             return;
@@ -54,4 +54,6 @@ public partial class MainWindow
             BtnLogin.Content = "Login";
         }
     }
+
+    private void BtnStatistics_Click(object sender, RoutedEventArgs e) => new StatisticsWindow().Show();
 }

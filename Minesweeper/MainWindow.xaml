@@ -3,7 +3,6 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Minesweeper"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="600"
         Style="{StaticResource MaterialDesignWindow}"
@@ -35,14 +34,14 @@
                       HorizontalAlignment="Center"/>
         </StackPanel>
 
-        <Button x:Name="BtnStart" 
-                Grid.Row="3"
+        <Button
+            Grid.Row="3"
                 Content="Start" 
                 FontSize="36"
                 Width="140"
                 Height="60"
                 HorizontalAlignment="Center"
-                Click="Button_Click"/>
+                Click="BtnStart_Click"/>
 
         <StackPanel Grid.Row="4" Margin="15" HorizontalAlignment="Right">
             <Label x:Name="LblUser"
@@ -56,7 +55,16 @@
                 Height="40"
                 FontSize="18"
                 HorizontalAlignment="Center" 
-                Click="BtnLogin_Click" />
+                Click="BtnLogin_Click"/>
+        </StackPanel>
+        
+        <StackPanel Grid.Row="4" Margin="20" HorizontalAlignment="Left" VerticalAlignment="Bottom">
+            <Button
+                Content="Statistics" 
+                    Width="125" 
+                    Height="40"
+                    FontSize="18"
+                    Click="BtnStatistics_Click"/>
         </StackPanel>
     </Grid>
 </Window>
