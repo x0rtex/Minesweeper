@@ -26,6 +26,7 @@ public class Cell : Button
         }
     }
 
+    // Get or set (and invoke event) if the cell is flagged
     public bool IsFlagged
     {
         get => _isFlagged;
@@ -83,8 +84,9 @@ public class Cell : Button
             return;
         
         // If it's the very first click, generate mines around this point
-        if (!_mineGrid.MinesGenerated)               
+        if (!_mineGrid.MinesGenerated)
             _mineGrid.GenerateMinesExceptFirstClick(Pos);
+        
 
         CheckCell();
         _mineGrid.RevealEmptyAdjacentCells(this);

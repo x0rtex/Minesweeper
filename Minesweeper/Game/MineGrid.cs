@@ -30,13 +30,10 @@ public class MineGrid : UniformGrid
         Height = absoluteBoardDimensions.X;
     }
 
-    // Generates cells and updates their adjacent mines
-    public void PrepareBoard()
-    {
-        GenerateCells();
-        // UpdateAllAdjacentMines();
-    }
+    // Generate cells
+    public void PrepareBoard() => GenerateCells();
     
+    // Generate mines except for the first click, and update adjacent mines
     public void GenerateMinesExceptFirstClick(Point firstClick)
     {
         HashSet<Point> allCellPositions = CreateAllCellPositions(_gridDimensions);
