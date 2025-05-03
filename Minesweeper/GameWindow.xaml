@@ -15,6 +15,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
         <Grid Grid.Row="0" Margin="10">
@@ -29,25 +30,14 @@
                        FontSize="24"
                        VerticalAlignment="Center"
                        Text="Mines: 0"/>
-
-            <StackPanel Grid.Column="1"
-                        Orientation="Horizontal"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center"
-                        Margin="10,0">
-                <Button x:Name="BtnBack" 
-                        Content="⬅️" 
-                        Width="50"
-                        Height="30"
-                        Margin="0,0,5,0"
-                        Click="BtnBack_Click"/>
-
-                <Button x:Name="BtnRestart" 
-                        Content="🙂" 
-                        Width="50"
-                        Height="30"
-                        Click="BtnRestart_Click"/>
-            </StackPanel>
+            
+                <StackPanel Grid.Column="1" 
+                            Orientation="Horizontal"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center">
+                    <Button Content="⬅️" Width="50" Height="30" Margin="0,0,5,0" Click="BtnBack_Click"/>
+                    <Button Content="🙂" Width="50" Height="30" Click="BtnRestart_Click"/>
+                </StackPanel>
 
             <TextBlock x:Name="TblkTimer" Grid.Column="2"
                        FontSize="24"
@@ -55,8 +45,16 @@
                        HorizontalAlignment="Right"
                        Text="Timer: 000"/>
         </Grid>
+        
+        <TextBlock Name="TblkSeed"
+                   Grid.Row="1"
+                   Grid.Column="0"
+                   HorizontalAlignment="Center"
+                   FontSize="12"
+                   Opacity="0.5"
+                   Text="Seed: 0"/>
 
-        <Border x:Name="BrdrMineGrid" Grid.Row="1"
+        <Border x:Name="BrdrMineGrid" Grid.Row="2"
                 Margin="10"
                 BorderBrush="Black"
                 BorderThickness="1"

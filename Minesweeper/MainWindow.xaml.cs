@@ -28,7 +28,11 @@ public partial class MainWindow
 
         DifficultyLevel difficulty = (DifficultyLevel)CbxDifficulty.SelectedItem;
 
-        new GameWindow(difficulty).Show();
+        int? seed = int.TryParse(TbxSeed.Text, out int parsed)
+            ? parsed
+            : null;
+        
+        new GameWindow(difficulty, seed).Show();
         Close();
     }
 

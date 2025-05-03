@@ -7,19 +7,21 @@ namespace Minesweeper;
 
 public class MineGrid : UniformGrid
 {
+    private readonly GameWindow _gameWindow;
     private readonly Point _gridDimensions;
     private readonly int _mineCount;
-    private readonly GameWindow _gameWindow;
+    private readonly Random _rng;
     
     public Cell[,] Cells { get; }  // 2D array of cells
     public bool MinesGenerated { get; private set; }
 
     // Constructor
-    public MineGrid(Point gridDimensions, Point absoluteBoardDimensions, int mineCount, GameWindow gameWindow)
+    public MineGrid(Point gridDimensions, Point absoluteBoardDimensions, int mineCount, GameWindow gameWindow, int seed)
     {
         _gridDimensions = gridDimensions;
         _mineCount = mineCount;
         _gameWindow = gameWindow;
+        _rng = new Random(seed);
         Cells = new Cell[gridDimensions.X, gridDimensions.Y];
 
         Rows = gridDimensions.X;
@@ -78,10 +80,8 @@ public class MineGrid : UniformGrid
     // Creates a HashSet of random mine positions based on all cell positions
     private HashSet<Point> CreateMinePositions(HashSet<Point> cellPositions)
     {
-        Random random = new();
-
         return cellPositions
-            .OrderBy(_ => random.Next())
+            .OrderBy(_ => _rng.Next())
             .Take(_mineCount)
             .ToHashSet();
     }

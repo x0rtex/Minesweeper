@@ -13,14 +13,16 @@ public partial class GameWindow
 {
     private readonly DifficultyLevel _difficulty;
     private readonly DispatcherTimer _gameTimer;
+    private readonly int? _seed;
     private TimeSpan _time = TimeSpan.Zero;
     private int _currentMineCount;
 
     // Constructor
-    public GameWindow(DifficultyLevel selectedDifficulty)
+    public GameWindow(DifficultyLevel selectedDifficulty, int? seed = null)
     {
         InitializeComponent();
 
+        _seed = seed;
         _difficulty = selectedDifficulty;
         _gameTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(1) };
         _gameTimer.Tick += GameTimerTick;
@@ -33,13 +35,16 @@ public partial class GameWindow
     // Initialize game by creating mine grid and timer
     private void InitializeGame()
     {
+        int seed = _seed ?? Environment.TickCount;
+        TblkSeed.Text = $"Seed: {seed}";
+        
         (Point gridDimensions, int mineCount) = Difficulty.GetGridSizeAndMineCount(_difficulty);
         Point absoluteBoardDimensions = Difficulty.GetAbsoluteBoardSize(gridDimensions);
         _currentMineCount = mineCount;
         TblkMines.Text = $"Mines: {mineCount}";
 
         Grid board = new() { Width = absoluteBoardDimensions.Y, Height = absoluteBoardDimensions.X };
-        MineGrid mineGrid = new(gridDimensions, absoluteBoardDimensions, mineCount, this);
+        MineGrid mineGrid = new(gridDimensions, absoluteBoardDimensions, mineCount, this, seed);
         mineGrid.PrepareBoard();
 
         board.Children.Add(mineGrid);

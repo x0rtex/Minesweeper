@@ -11,10 +11,11 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
         <TextBlock Grid.Row="1" 
@@ -31,6 +32,7 @@
                        Margin="0,0,0,5"/>
             <ComboBox x:Name="CbxDifficulty" 
                       Width="120"
+                      FontSize="14"
                       HorizontalAlignment="Center"/>
         </StackPanel>
 
@@ -42,8 +44,18 @@
                 Height="60"
                 HorizontalAlignment="Center"
                 Click="BtnStart_Click"/>
+        <StackPanel Grid.Row="4"
+                    Margin="0,20,0,0"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Center"> 
+            <TextBlock Text="Seed: "
+                       FontSize="14"/>
+            <TextBox x:Name="TbxSeed" 
+                     Width="120" 
+                     FontSize="14"/>
+        </StackPanel>
 
-        <StackPanel Grid.Row="4" Margin="15" HorizontalAlignment="Right">
+        <StackPanel Grid.Row="5" Margin="15" HorizontalAlignment="Right">
             <Label x:Name="LblUser"
                Content="Not logged in"
                FontSize="16"
@@ -58,7 +70,7 @@
                 Click="BtnLogin_Click"/>
         </StackPanel>
         
-        <StackPanel Grid.Row="4" Margin="20" HorizontalAlignment="Left" VerticalAlignment="Bottom">
+        <StackPanel Grid.Row="5" Margin="20" HorizontalAlignment="Left" VerticalAlignment="Bottom">
             <Button
                 Content="Statistics" 
                     Width="125" 
