@@ -7,11 +7,14 @@ namespace Minesweeper;
 
 public class Cell : Button
 {
+    private readonly GameWindow _gameWindow;
+    private readonly MineGrid _mineGrid;
+    private int _adjacentMines;
+    private bool _isFlagged;  // Get or set (and invoke event) if the cell is flagged
+
     public Point Pos { get; }
     public bool IsMine { get; set; }
-    private int _adjacentMines;
-    private readonly GameWindow _gameWindow;
-
+    
     // Get or set the number of adjacent mines
     public int AdjacentMines
     {
@@ -22,9 +25,7 @@ public class Cell : Button
             UpdateColour();
         }
     }
-    
-    // Get or set (and invoke event) if the cell is flagged
-    private bool _isFlagged;
+
     public bool IsFlagged
     {
         get => _isFlagged;
@@ -49,9 +50,10 @@ public class Cell : Button
             );
 
     // Constructor
-    private Cell(Point pos, GameWindow gameWindow)
+    private Cell(Point pos, GameWindow gameWindow, MineGrid mineGrid)
     {
-        _gameWindow = gameWindow; // Store the GameWindow reference
+        _gameWindow = gameWindow;
+        _mineGrid = mineGrid;
         Pos = pos;
         Margin = new Thickness(1);
         FontSize = 22;
@@ -60,7 +62,10 @@ public class Cell : Button
     }
 
     // Returns a new cell
-    public static Cell CreateCell(Point position, GameWindow gameWindow) => new(position, gameWindow);
+    public static Cell CreateCell(Point position, GameWindow gameWindow, MineGrid mineGrid)
+    {
+        return new Cell(position, gameWindow, mineGrid);
+    } 
 
     // Checks if a cell is a mine or not
     private void CheckCell()
@@ -74,12 +79,15 @@ public class Cell : Button
     // Handles left-clicking a cell
     protected override void OnClick()
     {
-        // TODO: First click must be safe (i.e. no mine)
         if (IsFlagged)
             return;
+        
+        // If it's the very first click, generate mines around this point
+        if (!_mineGrid.MinesGenerated)               
+            _mineGrid.GenerateMinesExceptFirstClick(Pos);
 
         CheckCell();
-        ((MineGrid)Parent).RevealEmptyAdjacentCells(this);
+        _mineGrid.RevealEmptyAdjacentCells(this);
     }
     
     // Handles right-clicking a cell
@@ -127,17 +135,14 @@ public class Cell : Button
     // Show game over and reveal all cells
     private void EndGame()
     {
-        _gameWindow.OnGameLost(); // Explicitly call OnGameLost
+        _ = _gameWindow.OnGameLost(); // Explicitly call OnGameLost
         RevealAllCells();
     }
 
     // Reveal all cells on the board
-    // I'm unsure about using the 'Parent' keyword to access the MineGrid
-    // instance, there may be a better way to manage this relationship
     private void RevealAllCells()
     {
-        MineGrid mineGrid = (MineGrid)Parent;
-        foreach (Cell cell in mineGrid.Cells)
+        foreach (Cell cell in _mineGrid.Cells)
         {
             if (cell == this)
                 continue;

@@ -38,7 +38,7 @@ public partial class LoginWindow
         catch (Exception error)
         {
             Console.WriteLine($@"Error occured: {error.Message}");
-            throw; // TODO handle exception
+            throw;
         }
     }
 

@@ -10,16 +10,16 @@ public class MineGrid : UniformGrid
     private readonly Point _gridDimensions;
     private readonly int _mineCount;
     private readonly GameWindow _gameWindow;
-
-    // 2D array of cells
-    public Cell[,] Cells { get; }
+    
+    public Cell[,] Cells { get; }  // 2D array of cells
+    public bool MinesGenerated { get; private set; }
 
     // Constructor
     public MineGrid(Point gridDimensions, Point absoluteBoardDimensions, int mineCount, GameWindow gameWindow)
     {
         _gridDimensions = gridDimensions;
         _mineCount = mineCount;
-        _gameWindow = gameWindow; // Store the GameWindow reference
+        _gameWindow = gameWindow;
         Cells = new Cell[gridDimensions.X, gridDimensions.Y];
 
         Rows = gridDimensions.X;
@@ -34,38 +34,48 @@ public class MineGrid : UniformGrid
     public void PrepareBoard()
     {
         GenerateCells();
+        // UpdateAllAdjacentMines();
+    }
+    
+    public void GenerateMinesExceptFirstClick(Point firstClick)
+    {
+        HashSet<Point> allCellPositions = CreateAllCellPositions(_gridDimensions);
+        
+        allCellPositions.ExceptWith(GetAdjacentCells(Cells[firstClick.X, firstClick.Y])
+            .Select(c => c.Pos)
+            .Append(firstClick));
+        
+        HashSet<Point> minePositions = CreateMinePositions(allCellPositions);
+        
+        foreach (Point pos in minePositions)
+            Cells[pos.X, pos.Y].IsMine = true;
+        
         UpdateAllAdjacentMines();
+
+        MinesGenerated = true;
     }
 
     // Generates all cells based on grid dimensions
-    // I changed List to HashSet - each cell is unique,
-    // thus retrieval with hash table is faster. 
     private void GenerateCells()
     {
-        HashSet<Point> cellPositions = CreateAllCellPositions(_gridDimensions);
-        HashSet<Point> minePositions = CreateMinePositions(cellPositions);
-
         for (int x = 0; x < _gridDimensions.X; x++)
             for (int y = 0; y < _gridDimensions.Y; y++)
             {
-                Cell cell = Cell.CreateCell(new Point(x, y), _gameWindow);
+                Cell cell = Cell.CreateCell(new Point(x, y), _gameWindow, this);
                 Cells[x, y] = cell;
                 Children.Add(cell);
-
-                if (minePositions.Contains(cell.Pos))
-                    cell.IsMine = true;
             }
     }
 
     // Creates a HashSet of all cell positions
-    private static HashSet<Point> CreateAllCellPositions(Point gridDimensions)
+    private HashSet<Point> CreateAllCellPositions(Point gridDimensions)
     {
-        HashSet<Point> cellPositions = [];
-        for (int x = 0; x < gridDimensions.X; x++)
-            for (int y = 0; y < gridDimensions.Y; y++)
-                cellPositions.Add(new Point(x, y));
-
-        return cellPositions;
+        return
+        [
+            ..from x in Enumerable.Range(0, _gridDimensions.X)
+            from y in Enumerable.Range(0, _gridDimensions.Y)
+            select new Point(x, y)
+        ];
     }
 
     // Creates a HashSet of random mine positions based on all cell positions
